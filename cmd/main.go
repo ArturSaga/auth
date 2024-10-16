@@ -12,7 +12,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
+	desc "github.com/ArturSaga/auth/api2/grpc/pkg/user_v1"
 )
 
 const grpcPort = 50051
