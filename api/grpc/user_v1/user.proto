@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.com/ArturSaga/auth/api/grpc/pkg/user_v1;user_v1";
+
+service UserApi {
+  rpc CreateUser(CreateUserRequest) returns(CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns(GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns(google.protobuf.Empty);
+  rpc DeleteUser(DeleteUserRequest) returns(google.protobuf.Empty);
+}
+
+enum Role {
+  UNKNOWN = 0;
+  ADMIN = 1;
+  USER = 2;
+}
+
+message UserInfo {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  string password_confirm = 4;
+  Role role = 5;
+}
+
+message User {
+  int64 id = 1;
+  UserInfo info = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message UpdateUserInfo {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue old_password = 2;
+  google.protobuf.StringValue password = 3;
+  google.protobuf.StringValue password_confirm = 4;
+  Role role = 5;
+}
+
+message CreateUserRequest {
+  UserInfo info = 1;
+}
+
+message CreateUserResponse {
+  int64 id = 1;
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message UpdateUserRequest {
+  UpdateUserInfo info = 1;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
