@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 env:
-  REGISTRY: "cr.selcloud.ru/auth"
+  REGISTRY: "cr.selcloud.ru/auth/auth-service"
   IMAGE_NAME: "auth-service"
   CONTAINER_NAME: "auth-service"
 
