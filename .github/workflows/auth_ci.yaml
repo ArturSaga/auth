@@ -50,14 +50,23 @@ jobs:
             # Login into Selectel Registry
             docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} $REGISTRY
             
-            # Stop running container
-            docker stop $CONTAINER_NAME
-            
-            # Remove old container
-            docker rm $CONTAINER_NAME
-            
-            # Run a new container from a new image
-            docker run -d -p 50051:50051 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
-            
-            # Run a new container from a new image
-            docker run -d -p 50052:50052 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
+#            # Stop running container
+#            docker stop $CONTAINER_NAME
+#
+#            # Remove old container
+#            docker rm $CONTAINER_NAME
+#
+#            # Run a new container from a new image
+#            docker run -d -p 50051:50051 --name $CONTAINER_NAME -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
+
+            # Stop and remove old containers if they exist
+            docker stop $CONTAINER_NAME-test || true
+            docker rm $CONTAINER_NAME-test || true
+            docker stop $CONTAINER_NAME-prod || true
+            docker rm $CONTAINER_NAME-prod || true
+  
+            # Run test environment
+            docker run -d -p 50051:50051 --name ${CONTAINER_NAME}-test -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
+  
+            # Run production environment
+            docker run -d -p 50052:50052 --name ${CONTAINER_NAME}-prod -t $REGISTRY/$IMAGE_NAME:$TAG_NAME
