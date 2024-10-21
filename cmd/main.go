@@ -55,7 +55,7 @@ func (s *server) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.G
 		User: &desc.User{
 			Id: req.GetId(),
 			Info: &desc.UserInfo{
-				Name:            gofakeit.Name(),
+				Name:            "Amirjonik",
 				Email:           gofakeit.Email(),
 				Password:        password,
 				PasswordConfirm: password,
