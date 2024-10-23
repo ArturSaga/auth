@@ -194,7 +194,7 @@ func (s *server) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.G
 
 // UpdateUser - публичный метод, который обновляет данные пользователя.
 func (s *server) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*emptypb.Empty, error) {
-	user, userInfoID := s.getUser(ctx, req.Info.UserID)
+	user, userInfoID := s.getUserAndUserInfoID(ctx, req.Info.UserID)
 	if user == nil {
 		return nil, errors.New("User not found by this ID")
 	}
@@ -284,11 +284,32 @@ func (s *server) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*
 
 // DeleteUser - публичный метод, который удаляет пользователя.
 func (s *server) DeleteUser(ctx context.Context, req *desc.DeleteUserRequest) (*emptypb.Empty, error) {
-	builderDelete := sq.Delete("\"user\"").
+	_, userInfoID := s.getUserAndUserInfoID(ctx, req.Id)
+	if userInfoID != 0 {
+		return nil, errors.New("userInfo not found")
+	}
+
+	builderUserINfo := sq.Delete("user_info").
+		PlaceholderFormat(sq.Dollar).
+		Where(sq.Eq{"id": userInfoID})
+	query, args, err := builderUserINfo.ToSql()
+
+	if err != nil {
+		fmt.Printf("failed to build query: %v", err)
+		return nil, nil
+	}
+
+	_, err = s.pool.Exec(ctx, query, args...)
+	if err != nil {
+		fmt.Printf("failed to get roleID: %v", err)
+		return nil, err
+	}
+
+	builderUserDelete := sq.Delete("\"user\"").
 		PlaceholderFormat(sq.Dollar).
 		Where(sq.Eq{"id": req.Id})
 
-	query, args, err := builderDelete.ToSql()
+	query, args, err = builderUserDelete.ToSql()
 	if err != nil {
 		fmt.Printf("failed to build query: %v", err)
 		return nil, nil
@@ -325,7 +346,7 @@ func (s *server) getRoleID(ctx context.Context, role string) (int64, error) {
 	return roleID, nil
 }
 
-func (s *server) getUser(ctx context.Context, userID int64) (*desc.User, int64) {
+func (s *server) getUserAndUserInfoID(ctx context.Context, userID int64) (*desc.User, int64) {
 	builderSelect := sq.Select("id", "info_id", "created_at", "updated_at").
 		From("\"user\"").
 		PlaceholderFormat(sq.Dollar).
