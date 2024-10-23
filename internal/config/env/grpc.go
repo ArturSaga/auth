@@ -21,6 +21,7 @@ type grpcConfig struct {
 	port string
 }
 
+// NewGRPCConfig - публичный метод, который получает данные для подключения GRPC из env файла
 func NewGRPCConfig() (*grpcConfig, error) {
 	host := os.Getenv(grpcHostEnvName)
 	if len(host) == 0 {
@@ -38,6 +39,7 @@ func NewGRPCConfig() (*grpcConfig, error) {
 	}, nil
 }
 
+// Address - публичный метод, который формирует адресс подключения из полученных данных
 func (cfg *grpcConfig) Address() string {
 	return net.JoinHostPort(cfg.host, cfg.port)
 }

@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE TABLE users IF NOT EXISTS
+CREATE TABLE IF NOT EXISTS "user"
 (
     id         BIGSERIAL PRIMARY KEY,
     info_id    BIGINT REFERENCES user_info (id),
@@ -9,4 +9,4 @@ CREATE TABLE users IF NOT EXISTS
 
 
 -- +goose Down
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;

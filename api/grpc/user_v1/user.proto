@@ -35,11 +35,12 @@ message User {
 }
 
 message UpdateUserInfo {
-  google.protobuf.StringValue name = 1;
-  google.protobuf.StringValue old_password = 2;
-  google.protobuf.StringValue password = 3;
-  google.protobuf.StringValue password_confirm = 4;
-  Role role = 5;
+  int64 userID = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue old_password = 3;
+  google.protobuf.StringValue password = 4;
+  google.protobuf.StringValue password_confirm = 5;
+  Role role = 6;
 }
 
 message CreateUserRequest {

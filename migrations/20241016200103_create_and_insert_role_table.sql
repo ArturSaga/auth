@@ -1,12 +1,11 @@
 -- +goose Up
-CREATE TABLE IF NOT EXISTS roles
+CREATE TABLE IF NOT EXISTS role
 (
-    id   SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY CHECK (id >= 0),
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
-INSERT INTO roles (name)
-VALUES ('UNKNOWN'),('ADMIN'),('USER');
+INSERT INTO role (id, name) VALUES (0, 'UNKNOWN'), (1, 'ADMIN'), (2, 'USER');
 
 -- +goose Down
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS role;
