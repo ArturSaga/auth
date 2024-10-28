@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option go_package = "github.com/ArturSaga/auth/api2/grpc/pkg/user_v1;user_v1";
+option go_package = "github.com/ArturSaga/auth/api/grpc/pkg/user_v1;user_v1";
 
 service UserApi {
   rpc CreateUser(CreateUserRequest) returns(CreateUserResponse);
