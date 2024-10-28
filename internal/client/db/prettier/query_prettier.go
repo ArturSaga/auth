@@ -7,10 +7,13 @@ import (
 )
 
 const (
-	PlaceholderDollar   = "$"
+	// PlaceholderDollar - плейсхолдер для вставки параметров в SQL запрос.
+	PlaceholderDollar = "$"
+	// PlaceholderQuestion - плейсхолдер для вставки параметров в SQL запрос.
 	PlaceholderQuestion = "?"
 )
 
+// Pretty - метод, для формирования запроса с параметрами.
 func Pretty(query string, placeholder string, args ...any) string {
 	for i, param := range args {
 		var value string

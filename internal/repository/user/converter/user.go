@@ -5,6 +5,7 @@ import (
 	modelRepo "github.com/ArturSaga/auth/internal/repository/user/model"
 )
 
+// ToUserFromRepo - ковертер, который преобразует модель репо слоя в смодель сервисного слоя
 func ToUserFromRepo(user *modelRepo.User) *model.User {
 	return &model.User{
 		ID:        user.ID,
@@ -14,6 +15,7 @@ func ToUserFromRepo(user *modelRepo.User) *model.User {
 	}
 }
 
+// ToUserInfoFromRepo - ковертер, который преобразует модель репо слоя в смодель сервисного слоя
 func ToUserInfoFromRepo(info modelRepo.UserInfo) model.UserInfo {
 	return model.UserInfo{
 		Name:            info.Name,

@@ -8,6 +8,7 @@ import (
 	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
 )
 
+// User - модель, для работы с сервисным слоем
 type User struct {
 	ID        int64
 	Info      UserInfo
@@ -15,6 +16,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+// UserInfo - модель, для работы с сервисным слоем
 type UserInfo struct {
 	Name            string    `db:"name"`
 	Email           string    `db:"email"`
@@ -23,6 +25,7 @@ type UserInfo struct {
 	Role            desc.Role `db:"role"`
 }
 
+// UpdateUserInfo - модель, для работы с сервисным слоем
 type UpdateUserInfo struct {
 	UserID          int64                   `db:"id"`
 	Name            *wrapperspb.StringValue `db:"name"`

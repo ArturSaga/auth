@@ -7,6 +7,7 @@ import (
 	"github.com/ArturSaga/auth/internal/model"
 )
 
+// ToUserFromService - ковертер, который преобразует модель сервисного слоя в модель апи (протобаф) слоя
 func ToUserFromService(user *model.User) *desc.User {
 	return &desc.User{
 		Id:        user.ID,
@@ -16,6 +17,7 @@ func ToUserFromService(user *model.User) *desc.User {
 	}
 }
 
+// ToUserInfoFromRepo - ковертер, который преобразует модель сервисного слоя в модель апи (протобаф) слоя
 func ToUserInfoFromRepo(info model.UserInfo) *desc.UserInfo {
 	return &desc.UserInfo{
 		Name:            info.Name,
@@ -26,6 +28,7 @@ func ToUserInfoFromRepo(info model.UserInfo) *desc.UserInfo {
 	}
 }
 
+// ToUserInfoFromDesc - ковертер, который преобразует модель апи (протобаф) слоя в модель сервисного слоя
 func ToUserInfoFromDesc(info *desc.UserInfo) *model.UserInfo {
 	return &model.UserInfo{
 		Name:            info.Name,
@@ -36,6 +39,7 @@ func ToUserInfoFromDesc(info *desc.UserInfo) *model.UserInfo {
 	}
 }
 
+// ToUpdateUserInfoFromDesc - ковертер, который преобразует модель апи (протобаф) слоя в модель сервисного слоя
 func ToUpdateUserInfoFromDesc(info *desc.UpdateUserInfo) *model.UpdateUserInfo {
 	return &model.UpdateUserInfo{
 		UserID:          info.UserID,

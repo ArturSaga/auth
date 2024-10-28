@@ -11,6 +11,7 @@ type serv struct {
 	txManager db.TxManager
 }
 
+// NewUserService - публчиный метод, создающий сущность, для работы с сервисным слоем
 func NewUserService(userRepo repository.UserRepository, txManager db.TxManager) service.UserService {
 	return &serv{
 		userRepo:  userRepo,

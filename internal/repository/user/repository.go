@@ -34,6 +34,7 @@ type repo struct {
 	db db.Client
 }
 
+// NewUserRepository - публичный метод, создащий сущность репозитория, для работы с данными сущности в бд
 func NewUserRepository(db db.Client) repository.UserRepository {
 	return &repo{db: db}
 }

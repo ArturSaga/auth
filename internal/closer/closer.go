@@ -19,10 +19,12 @@ func Wait() {
 	globalCloser.Wait()
 }
 
+// CloseAll - публичный метод, вызывающий внутренний метод closeAll, закрывающий все переданные соденинения.
 func CloseAll() {
 	globalCloser.CloseAll()
 }
 
+// Closer - сущность, которая хранит в себе функции для закрытия, после завершения сессии
 type Closer struct {
 	mu    sync.Mutex
 	once  sync.Once
@@ -30,6 +32,7 @@ type Closer struct {
 	funcs []func() error
 }
 
+// New - публичный метод, для создания сущности Closer
 func New(sig ...os.Signal) *Closer {
 	c := &Closer{done: make(chan struct{})}
 	if len(sig) > 0 {
@@ -44,16 +47,19 @@ func New(sig ...os.Signal) *Closer {
 	return c
 }
 
+// Add - публичный метод, для добавления функции в слайс, ожидающих вызова функции Close
 func (c *Closer) Add(f ...func() error) {
 	c.mu.Lock()
 	c.funcs = append(c.funcs, f...)
 	c.mu.Unlock()
 }
 
+// Wait - публичный метод, ожидающих в канале сигнала
 func (c *Closer) Wait() {
 	<-c.done
 }
 
+// CloseAll - публичный метод, выполняющий функции Close
 func (c *Closer) CloseAll() {
 	c.once.Do(func() {
 		defer close(c.done)

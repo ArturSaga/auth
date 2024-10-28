@@ -8,6 +8,7 @@ import (
 	"github.com/ArturSaga/auth/internal/model"
 )
 
+// UserRepository - интерфейс, определящий методы репо слоя
 type UserRepository interface {
 	CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64, error)
 	GetUser(ctx context.Context, id int64) (*model.User, error)

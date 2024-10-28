@@ -8,6 +8,7 @@ import (
 	"github.com/ArturSaga/auth/internal/model"
 )
 
+// UserService - интерфейс, определящий методы сервисного слоя
 type UserService interface {
 	CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64, error)
 	GetUser(ctx context.Context, id int64) (*model.User, error)

@@ -14,11 +14,13 @@ import (
 	"github.com/ArturSaga/auth/internal/config"
 )
 
+// App - сущность приложения, для запуска сервера и инициализации его зависимостей
 type App struct {
 	serviceProvider *serviceProvider
 	grpcServer      *grpc.Server
 }
 
+// NewApp - публичный метод, создающий сущность приложения
 func NewApp(ctx context.Context) (*App, error) {
 	a := &App{}
 
@@ -30,6 +32,7 @@ func NewApp(ctx context.Context) (*App, error) {
 	return a, nil
 }
 
+// Run - публичный метод, запускающий grpc сервер
 func (a *App) Run() error {
 	defer func() {
 		closer.CloseAll()

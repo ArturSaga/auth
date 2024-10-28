@@ -5,11 +5,13 @@ import (
 	"github.com/ArturSaga/auth/internal/service"
 )
 
+// Implementation - сущность, которая ипмлементирует контракты
 type Implementation struct {
 	desc.UnimplementedUserApiServer
 	userService service.UserService
 }
 
+// NewImplementation - публичный метод, реализует контракты
 func NewImplementation(userService service.UserService) *Implementation {
 	return &Implementation{
 		userService: userService,
