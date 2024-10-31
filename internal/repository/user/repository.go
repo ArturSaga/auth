@@ -39,11 +39,8 @@ func NewUserRepository(db db.Client) repository.UserRepository {
 	return &repo{db: db}
 }
 
+// CreateUser - публичный метод, создания пользователя в бд
 func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64, error) {
-	if userInfo.Password != userInfo.PasswordConfirm {
-		return 0, errors.New("confirm password not equal to password")
-	}
-
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(userInfo.Password), hashCost)
 	if err != nil {
 		fmt.Printf("failed to hash password: %v", err)
@@ -51,7 +48,6 @@ func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64,
 	}
 
 	now := time.Now()
-	fmt.Println(userInfo.Role)
 	// Делаем запрос на вставку записи в таблицу user
 	builderInsert := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
@@ -82,6 +78,7 @@ func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64,
 	return userID, nil
 }
 
+// GetUser - публичный метод, получения пользователя из бд
 func (r *repo) GetUser(ctx context.Context, id int64) (*model.User, error) {
 	builderSelect := sq.Select(idColumn, nameColumn, emailColumn, passwordHashColumn, roleColumn, createdAtColumn, updatedAtColumn).
 		From(tableName).
@@ -99,63 +96,38 @@ func (r *repo) GetUser(ctx context.Context, id int64) (*model.User, error) {
 	}
 
 	var user modelRepo.User
-	var userInfo modelRepo.UserInfo
-	var role string
-	var createdAt, updatedAt time.Time
-	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&user.ID, &userInfo.Name, &userInfo.Email, &userInfo.Password, &role, &createdAt, &updatedAt)
+	err = r.db.DB().ScanOneContext(ctx, &user, q, args...)
 	if err != nil {
 		fmt.Printf("failed to get user: %v", err)
 		return nil, err
 	}
-	userInfo.Role = modelRepo.RoleFromString(role)
-	user.Info = userInfo
-	user.CreatedAt = createdAt
-	user.UpdatedAt = updatedAt
 
 	return converter.ToUserFromRepo(&user), nil
 }
 
+// UpdateUser - публичный метод, обновления пользователя в бд
 func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserInfo) (emptypb.Empty, error) {
-	user, err := r.GetUser(ctx, updateUserInfo.UserID)
-	fmt.Println(updateUserInfo.Role)
-	if err != nil {
-		return emptypb.Empty{}, err
-	}
-
-	if updateUserInfo.OldPassword != nil {
-		err = bcrypt.CompareHashAndPassword([]byte(user.Info.Password), []byte(updateUserInfo.OldPassword.Value))
-		if err != nil {
-			return emptypb.Empty{}, fmt.Errorf("old password not equal to current password: %v", err)
-		}
-
-		if updateUserInfo.Password != updateUserInfo.PasswordConfirm {
-			return emptypb.Empty{}, errors.New("confirm password not equal to password")
-		}
-	}
-
 	builderUserInfoUpdate := sq.Update(tableName)
 	hasUpdates := false // Флаг для проверки наличия обновлений
 
 	if updateUserInfo.Name != nil {
-		builderUserInfoUpdate = builderUserInfoUpdate.Set("name", updateUserInfo.Name.Value)
+		builderUserInfoUpdate = builderUserInfoUpdate.Set(nameColumn, *updateUserInfo.Name)
 		hasUpdates = true
 	}
 
-	fmt.Println(updateUserInfo.Role)
-	fmt.Println(user.Info.Role)
-
-	if updateUserInfo.Role != user.Info.Role {
-		builderUserInfoUpdate = builderUserInfoUpdate.Set("role", updateUserInfo.Role.String())
+	if updateUserInfo.Role != nil {
+		roleStr := fmt.Sprintf("%s", *updateUserInfo.Role)
+		builderUserInfoUpdate = builderUserInfoUpdate.Set(roleColumn, roleStr)
 		hasUpdates = true
 	}
 
 	if updateUserInfo.Password != nil {
-		hashNewPassword, err := bcrypt.GenerateFromPassword([]byte(updateUserInfo.Password.Value), hashCost)
+		hashNewPassword, err := bcrypt.GenerateFromPassword([]byte(*updateUserInfo.Password), hashCost)
 		if err != nil {
 			fmt.Printf("failed to hash password: %v", err)
 			return emptypb.Empty{}, err
 		}
-		builderUserInfoUpdate = builderUserInfoUpdate.Set("password", hashNewPassword)
+		builderUserInfoUpdate = builderUserInfoUpdate.Set(passwordHashColumn, hashNewPassword)
 		hasUpdates = true
 	}
 
@@ -172,7 +144,7 @@ func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserI
 
 		_, err = r.db.DB().ExecContext(ctx, q, args...)
 		if err != nil {
-			return emptypb.Empty{}, fmt.Errorf("failed to update user: %v", err)
+			return emptypb.Empty{}, err
 		}
 	} else {
 		return emptypb.Empty{}, errors.New("No fields to update")
@@ -181,6 +153,7 @@ func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserI
 	return emptypb.Empty{}, nil
 }
 
+// DeleteUser - публичный метод, удаления пользователя в бд
 func (r *repo) DeleteUser(ctx context.Context, id int64) (emptypb.Empty, error) {
 	builderUserDelete := sq.Delete(tableName).
 		PlaceholderFormat(sq.Dollar).
