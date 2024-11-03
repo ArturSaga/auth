@@ -26,7 +26,7 @@ type serviceProvider struct {
 
 	userServ service.UserService
 
-	userApi *user.UserAPI
+	userApi *user.UserApi
 }
 
 func newServiceProvider() *serviceProvider {
@@ -111,7 +111,7 @@ func (s *serviceProvider) UserService(ctx context.Context) service.UserService {
 }
 
 // UserImpl - публичный метод, инициализирующий объект сервера
-func (s *serviceProvider) UserImpl(ctx context.Context) *user.UserAPI {
+func (s *serviceProvider) UserImpl(ctx context.Context) *user.UserApi {
 	if s.userApi == nil {
 		s.userApi = user.NewUserAPI(s.UserService(ctx))
 	}

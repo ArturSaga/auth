@@ -10,7 +10,7 @@ import (
 )
 
 // GetUser - публичный метод, который позволяет получить данные пользователя.
-func (i *UserAPI) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.GetUserResponse, error) {
+func (i *UserApi) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.GetUserResponse, error) {
 	userObj, err := i.userService.GetUser(ctx, req.GetId())
 	if err != nil {
 		fmt.Printf("failed to get user: %v", err)

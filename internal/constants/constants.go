@@ -1,7 +1,8 @@
 package constants
 
 const (
-	UNKNOWN = "UNKNOWN"
-	ADMIN   = "ADMIN"
-	USER    = "USER"
+	// ADMIN - роль пользователя
+	ADMIN = "ADMIN"
+	// USER - роль пользователя
+	USER = "USER"
 )

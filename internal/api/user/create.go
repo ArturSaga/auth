@@ -11,7 +11,7 @@ import (
 )
 
 // CreateUser - публичный метод, который создает пользователя.
-func (i *UserAPI) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*desc.CreateUserResponse, error) {
+func (i *UserApi) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*desc.CreateUserResponse, error) {
 	if !i.validate(req) {
 		return nil, serviceErr.ErrPasswordsNotMatch
 	}
@@ -26,7 +26,7 @@ func (i *UserAPI) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (
 	}, nil
 }
 
-func (i *UserAPI) validate(req *desc.CreateUserRequest) bool {
+func (i *UserApi) validate(req *desc.CreateUserRequest) bool {
 	if req.Info.Password != "" && req.Info.PasswordConfirm != "" {
 		if req.Info.Password != req.Info.PasswordConfirm {
 			log.Println("passwords don't match")
