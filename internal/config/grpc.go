@@ -4,7 +4,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/pkg/errors"
+	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
 const (
@@ -26,12 +26,12 @@ type grpcConfig struct {
 func NewGRPCConfig() (GRPCConfig, error) {
 	host := os.Getenv(grpcHostEnvName)
 	if len(host) == 0 {
-		return nil, errors.New("grpc host not found")
+		return nil, serviceErr.ErrGrpcHostNotFound
 	}
 
 	port := os.Getenv(grpcPortEnvName)
 	if len(port) == 0 {
-		return nil, errors.New("grpc port not found")
+		return nil, serviceErr.ErrGrpcHostNotFound
 	}
 
 	return &grpcConfig{
@@ -40,6 +40,7 @@ func NewGRPCConfig() (GRPCConfig, error) {
 	}, nil
 }
 
+// Address -  публичный метод, формирующий url + port подключения к бд
 func (cfg *grpcConfig) Address() string {
 	return net.JoinHostPort(cfg.host, cfg.port)
 }

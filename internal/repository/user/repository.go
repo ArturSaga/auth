@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -16,19 +14,21 @@ import (
 	"github.com/ArturSaga/auth/internal/repository"
 	"github.com/ArturSaga/auth/internal/repository/user/converter"
 	modelRepo "github.com/ArturSaga/auth/internal/repository/user/model"
+	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
-const hashCost = 10
+const (
+	hashCost = 10
 
-const tableName = "users"
-
-const idColumn = "id"
-const nameColumn = "name"
-const emailColumn = "email"
-const passwordHashColumn = "password_hash"
-const roleColumn = "role"
-const createdAtColumn = "created_at"
-const updatedAtColumn = "updated_at"
+	tableName          = "users"
+	idColumn           = "id"
+	nameColumn         = "name"
+	emailColumn        = "email"
+	passwordHashColumn = "password_hash"
+	roleColumn         = "role"
+	createdAtColumn    = "created_at"
+	updatedAtColumn    = "updated_at"
+)
 
 type repo struct {
 	db db.Client
@@ -47,12 +47,10 @@ func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64,
 		return 0, err
 	}
 
-	now := time.Now()
-	// Делаем запрос на вставку записи в таблицу user
 	builderInsert := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
-		Columns(nameColumn, emailColumn, passwordHashColumn, roleColumn, createdAtColumn, updatedAtColumn).
-		Values(userInfo.Name, userInfo.Email, hashPassword, userInfo.Role.String(), now, now).
+		Columns(nameColumn, emailColumn, passwordHashColumn, roleColumn).
+		Values(userInfo.Name, userInfo.Email, hashPassword, userInfo.Role.String()).
 		Suffix("RETURNING id")
 
 	query, args, err := builderInsert.ToSql()
@@ -108,7 +106,7 @@ func (r *repo) GetUser(ctx context.Context, id int64) (*model.User, error) {
 // UpdateUser - публичный метод, обновления пользователя в бд
 func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserInfo) (emptypb.Empty, error) {
 	builderUserInfoUpdate := sq.Update(tableName)
-	hasUpdates := false // Флаг для проверки наличия обновлений
+	hasUpdates := false
 
 	if updateUserInfo.Name != nil {
 		builderUserInfoUpdate = builderUserInfoUpdate.Set(nameColumn, *updateUserInfo.Name)
@@ -147,7 +145,7 @@ func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserI
 			return emptypb.Empty{}, err
 		}
 	} else {
-		return emptypb.Empty{}, errors.New("No fields to update")
+		return emptypb.Empty{}, serviceErr.ErrUpdateUser
 	}
 
 	return emptypb.Empty{}, nil
@@ -171,7 +169,7 @@ func (r *repo) DeleteUser(ctx context.Context, id int64) (emptypb.Empty, error) 
 	}
 	_, err = r.db.DB().ExecContext(ctx, q, args...)
 	if err != nil {
-		fmt.Printf("failed to get roleID: %v", err)
+		fmt.Printf("failed to delete roleID: %v", err)
 	}
 	return emptypb.Empty{}, nil
 }

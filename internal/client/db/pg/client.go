@@ -25,10 +25,12 @@ func New(ctx context.Context, dsn string) (db.Client, error) {
 	}, nil
 }
 
+// DB - публичный метод, возвращающий соединение с бд
 func (c *pgClient) DB() db.DB {
 	return c.masterDBC
 }
 
+// Close - публичный метод, закрывающий соединение с бд
 func (c *pgClient) Close() error {
 	if c.masterDBC != nil {
 		c.masterDBC.Close()

@@ -32,15 +32,3 @@ type UpdateUserInfo struct {
 	PasswordConfirm *string `db:"password_confirm"`
 	Role            *desc.Role
 }
-
-// RoleFromString Функция для преобразования Role из строкового представления
-func RoleFromString(s string) desc.Role {
-	switch s {
-	case "ADMIN":
-		return desc.Role_ADMIN
-	case "USER":
-		return desc.Role_USER
-	default:
-		return desc.Role_UNKNOWN
-	}
-}

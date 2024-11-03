@@ -10,6 +10,10 @@ import (
 
 // ToUserFromService - ковертер, который преобразует модель сервисного слоя в модель апи (протобаф) слоя
 func ToUserFromService(user *model.User) *desc.User {
+	if user == nil {
+		return nil
+	}
+
 	return &desc.User{
 		Id:        user.ID,
 		Info:      ToUserInfoFromRepo(&user.Info),
@@ -20,6 +24,10 @@ func ToUserFromService(user *model.User) *desc.User {
 
 // ToUserInfoFromRepo - ковертер, который преобразует модель сервисного слоя в модель апи (протобаф) слоя
 func ToUserInfoFromRepo(info *model.UserInfo) *desc.UserInfo {
+	if info == nil {
+		return nil
+	}
+
 	return &desc.UserInfo{
 		Name:            info.Name,
 		Email:           info.Email,
@@ -31,6 +39,10 @@ func ToUserInfoFromRepo(info *model.UserInfo) *desc.UserInfo {
 
 // ToUserInfoFromDesc - ковертер, который преобразует модель апи (протобаф) слоя в модель сервисного слоя
 func ToUserInfoFromDesc(info *desc.UserInfo) *model.UserInfo {
+	if info == nil {
+		return &model.UserInfo{}
+	}
+
 	return &model.UserInfo{
 		Name:            info.Name,
 		Email:           info.Email,
@@ -42,6 +54,10 @@ func ToUserInfoFromDesc(info *desc.UserInfo) *model.UserInfo {
 
 // ToUpdateUserInfoFromDesc - ковертер, который преобразует модель апи (протобаф) слоя в модель сервисного слоя
 func ToUpdateUserInfoFromDesc(info *desc.UpdateUserInfo) *model.UpdateUserInfo {
+	if info == nil {
+		return &model.UpdateUserInfo{}
+	}
+
 	return &model.UpdateUserInfo{
 		UserID:          info.UserID,
 		Name:            checkEmptyOrNil(info.Name),

@@ -1,8 +1,9 @@
 package config
 
 import (
-	"errors"
 	"os"
+
+	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
 const (
@@ -22,7 +23,7 @@ type pgConfig struct {
 func NewPGConfig() (PGConfig, error) {
 	dsn := os.Getenv(dsnEnvName)
 	if len(dsn) == 0 {
-		return nil, errors.New("pg dsn not found")
+		return nil, serviceErr.ErrPgDsnNotFound
 	}
 
 	return &pgConfig{
@@ -30,6 +31,7 @@ func NewPGConfig() (PGConfig, error) {
 	}, nil
 }
 
+// DSN - публичный метод, возвращающий DSN
 func (cfg *pgConfig) DSN() string {
 	return cfg.dsn
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/ArturSaga/auth/internal/model"
 )
 
+// UpdateUser - публичный метод, сервиса для обновления пользователя
 func (s *serv) UpdateUser(ctx context.Context, userInfo *model.UpdateUserInfo) (emptypb.Empty, error) {
 	if *userInfo.Role == desc.Role_UNKNOWN {
 		userInfo.Role = nil

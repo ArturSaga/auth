@@ -26,13 +26,14 @@ type serviceProvider struct {
 
 	userServ service.UserService
 
-	implementation *user.Implementation
+	userApi *user.UserAPI
 }
 
 func newServiceProvider() *serviceProvider {
 	return &serviceProvider{}
 }
 
+// PgConfig - публичный метод, инициализирующий объект с postgres конфигами
 func (s serviceProvider) PgConfig() config.PGConfig {
 	if s.pgConfig == nil {
 		cfg, err := config.NewPGConfig()
@@ -46,6 +47,7 @@ func (s serviceProvider) PgConfig() config.PGConfig {
 	return s.pgConfig
 }
 
+// GRPCConfig - публичный метод, инициализирующий объект с grpc конфигами
 func (s serviceProvider) GRPCConfig() config.GRPCConfig {
 	if s.grpcConfig == nil {
 		cfg, err := config.NewGRPCConfig()
@@ -58,6 +60,7 @@ func (s serviceProvider) GRPCConfig() config.GRPCConfig {
 	return s.grpcConfig
 }
 
+// DBClient - публичный метод, инициализирующий объект соединения с бд
 func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	if s.dbClient == nil {
 		cl, err := pg.New(ctx, s.PgConfig().DSN())
@@ -77,6 +80,7 @@ func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	return s.dbClient
 }
 
+// TxManager - публичный метод, инициализирующий объект для работы с транзакциями
 func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	if s.txManager == nil {
 		s.txManager = transaction.NewTransactionManager(s.DBClient(ctx).DB())
@@ -85,6 +89,7 @@ func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	return s.txManager
 }
 
+// UserRepository - публичный метод, инициализирующий объект репозитория postgres
 func (s *serviceProvider) UserRepository(ctx context.Context) repository.UserRepository {
 	if s.userRepository == nil {
 		s.userRepository = userRepository.NewUserRepository(s.DBClient(ctx))
@@ -93,6 +98,7 @@ func (s *serviceProvider) UserRepository(ctx context.Context) repository.UserRep
 	return s.userRepository
 }
 
+// UserService - публичный метод, инициализирующий объект сервиса
 func (s *serviceProvider) UserService(ctx context.Context) service.UserService {
 	if s.userServ == nil {
 		s.userServ = userService.NewUserService(
@@ -104,10 +110,11 @@ func (s *serviceProvider) UserService(ctx context.Context) service.UserService {
 	return s.userServ
 }
 
-func (s *serviceProvider) UserImpl(ctx context.Context) *user.Implementation {
-	if s.implementation == nil {
-		s.implementation = user.NewImplementation(s.UserService(ctx))
+// UserImpl - публичный метод, инициализирующий объект сервера
+func (s *serviceProvider) UserImpl(ctx context.Context) *user.UserAPI {
+	if s.userApi == nil {
+		s.userApi = user.NewUserAPI(s.UserService(ctx))
 	}
 
-	return s.implementation
+	return s.userApi
 }

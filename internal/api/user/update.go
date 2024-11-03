@@ -4,20 +4,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
 	converter "github.com/ArturSaga/auth/internal/convertor"
+	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
 // UpdateUser - публичный метод, который обновляет данные пользователя.
-func (i *Implementation) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*emptypb.Empty, error) {
+func (i *UserAPI) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*emptypb.Empty, error) {
 	user, err := i.userService.GetUser(ctx, req.Info.UserID)
 	updateUserInfo := converter.ToUpdateUserInfoFromDesc(req.Info)
 	if err != nil {
-		return &emptypb.Empty{}, errors.New("user not found")
+		return &emptypb.Empty{}, serviceErr.ErrUpdateUser
 	}
 
 	if updateUserInfo.OldPassword != nil {
@@ -27,7 +27,7 @@ func (i *Implementation) UpdateUser(ctx context.Context, req *desc.UpdateUserReq
 		}
 
 		if updateUserInfo.Password != updateUserInfo.PasswordConfirm {
-			return &emptypb.Empty{}, errors.New("confirm password not equal to password")
+			return &emptypb.Empty{}, serviceErr.ErrPasswordsNotMatch
 		}
 	}
 
