@@ -26,6 +26,7 @@ func (i *UserApi) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (
 	}, nil
 }
 
+// validate - приватный метод, проверяющий на валидность входящие данные
 func (i *UserApi) validate(req *desc.CreateUserRequest) bool {
 	if req.Info.Password != "" && req.Info.PasswordConfirm != "" {
 		if req.Info.Password != req.Info.PasswordConfirm {
