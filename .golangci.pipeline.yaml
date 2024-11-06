@@ -49,3 +49,6 @@ issues:
     - exported func .* returns unexported type .*, which can be annoying to use
     - should have a package comment
     - don't use an underscore in package name
+    - type UserApi should be UserAPI
+    - struct field userApi should be userAPI
+    - type name will be used as user.UserApi by other packages, and that stutters; consider calling this Api
