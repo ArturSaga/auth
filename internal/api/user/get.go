@@ -6,7 +6,6 @@ import (
 
 	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
 	converter "github.com/ArturSaga/auth/internal/convertor"
-	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
 // GetUser - публичный метод, который позволяет получить данные пользователя.
@@ -17,12 +16,7 @@ func (i *UserApi) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.
 		return nil, err
 	}
 
-	user := converter.ToUserFromService(userObj)
-	if user != nil {
-		return &desc.GetUserResponse{
-			User: user,
-		}, nil
-	}
-
-	return nil, serviceErr.ErrGetUser
+	return &desc.GetUserResponse{
+		User: converter.ToUserFromService(userObj),
+	}, nil
 }

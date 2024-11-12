@@ -12,9 +12,10 @@ import (
 
 // CreateUser - публичный метод, который создает пользователя.
 func (i *UserApi) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (*desc.CreateUserResponse, error) {
-	if !i.validate(req) {
-		return nil, serviceErr.ErrPasswordsNotMatch
+	if err := i.validate(req); err != nil {
+		return nil, err
 	}
+
 	id, err := i.userService.CreateUser(ctx, converter.ToUserInfoFromDesc(req.Info))
 	if err != nil {
 		fmt.Printf("failed to create user: %v", err)
@@ -27,24 +28,24 @@ func (i *UserApi) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (
 }
 
 // validate - приватный метод, проверяющий на валидность входящие данные
-func (i *UserApi) validate(req *desc.CreateUserRequest) bool {
+func (i *UserApi) validate(req *desc.CreateUserRequest) error {
 	if req.Info.Password != "" && req.Info.PasswordConfirm != "" {
 		if req.Info.Password != req.Info.PasswordConfirm {
 			log.Println("passwords don't match")
-			return false
+			return serviceErr.ErrPasswordsNotMatch
 		}
 	} else {
 		log.Println("passwords can't be empty")
-		return false
+		return serviceErr.ErrRequireParam
 	}
 	if req.Info.Name == "" {
 		log.Println("name can't be empty")
-		return false
+		return serviceErr.ErrRequireParam
 	}
 	if req.Info.Email == "" {
 		log.Println("email can't be empty")
-		return false
+		return serviceErr.ErrRequireParam
 	}
 
-	return true
+	return nil
 }

@@ -13,4 +13,10 @@ var (
 	ErrGrpcHostNotFound = errors.New("grpc host not found")
 	// ErrPgDsnNotFound - ошибка получения данных DSN postgres
 	ErrPgDsnNotFound = errors.New("pg dsn not found")
+	// ErrRequireParam - отсутствует один из обязательных параметров
+	ErrRequireParam = errors.New("one of the parameters is nil")
+	// ErrConvertUser - отсутствует один из обязательных параметров
+	ErrConvertUser = errors.New("failed to convert model")
+	// ErrCompareOldPassword - отсутствует один из обязательных параметров
+	ErrCompareOldPassword = errors.New("old password not equal to current password")
 )

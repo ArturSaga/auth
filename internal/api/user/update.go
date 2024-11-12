@@ -23,10 +23,10 @@ func (i *UserApi) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (
 	if updateUserInfo.OldPassword != nil {
 		err = bcrypt.CompareHashAndPassword([]byte(user.Info.Password), []byte(*updateUserInfo.OldPassword))
 		if err != nil {
-			return &emptypb.Empty{}, fmt.Errorf("old password not equal to current password: %v", err)
+			return &emptypb.Empty{}, serviceErr.ErrCompareOldPassword
 		}
 
-		if updateUserInfo.Password != updateUserInfo.PasswordConfirm {
+		if *updateUserInfo.Password != *updateUserInfo.PasswordConfirm {
 			return &emptypb.Empty{}, serviceErr.ErrPasswordsNotMatch
 		}
 	}
@@ -35,7 +35,7 @@ func (i *UserApi) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (
 
 	if err != nil {
 		fmt.Printf("failed to update user: %v", err)
-		return nil, err
+		return &emptypb.Empty{}, err
 	}
 
 	return &emptypb.Empty{}, nil
