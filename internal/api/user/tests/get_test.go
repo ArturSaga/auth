@@ -19,15 +19,6 @@ import (
 )
 
 func TestUserApi_GetUser(t *testing.T) {
-	type fields struct {
-		UnimplementedUserApiServer desc.UnimplementedUserApiServer
-		userService                service.UserService
-	}
-	type args struct {
-		ctx context.Context
-		req *desc.GetUserRequest
-	}
-
 	t.Parallel()
 
 	// Инициализация контекста и вспомогательных данных
@@ -56,7 +47,7 @@ func TestUserApi_GetUser(t *testing.T) {
 		UpdatedAt: time,
 	}
 
-	userApi := &desc.User{
+	userAPI := &desc.User{
 		Id: id,
 		Info: &desc.UserInfo{
 			Name:            name,
@@ -74,7 +65,7 @@ func TestUserApi_GetUser(t *testing.T) {
 	}
 
 	res := &desc.GetUserResponse{
-		User: userApi,
+		User: userAPI,
 	}
 
 	// Очистка контроллера после завершения теста

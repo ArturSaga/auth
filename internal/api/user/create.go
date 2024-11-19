@@ -16,7 +16,7 @@ func (i *UserApi) CreateUser(ctx context.Context, req *desc.CreateUserRequest) (
 		return nil, err
 	}
 
-	id, err := i.userService.CreateUser(ctx, converter.ToUserInfoFromDesc(req.Info))
+	id, err := i.userService.CreateUser(ctx, converter.ToUserInfoServiceFromDesc(req.Info))
 	if err != nil {
 		fmt.Printf("failed to create user: %v", err)
 		return nil, err

@@ -23,15 +23,6 @@ import (
 )
 
 func TestUserApi_UpdateUser(t *testing.T) {
-	type fields struct {
-		UnimplementedUserApiServer desc.UnimplementedUserApiServer
-		userService                service.UserService
-	}
-	type args struct {
-		ctx context.Context
-		req *desc.UpdateUserRequest
-	}
-
 	t.Parallel()
 
 	// Инициализация контекста и вспомогательных данных

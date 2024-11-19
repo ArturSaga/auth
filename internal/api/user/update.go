@@ -15,7 +15,7 @@ import (
 // UpdateUser - публичный метод, который обновляет данные пользователя.
 func (i *UserApi) UpdateUser(ctx context.Context, req *desc.UpdateUserRequest) (*emptypb.Empty, error) {
 	user, err := i.userService.GetUser(ctx, req.Info.UserID)
-	updateUserInfo := converter.ToUpdateUserInfoFromDesc(req.Info)
+	updateUserInfo := converter.ToUpdateUserInfoServiceFromDesc(req.Info)
 	if err != nil {
 		return &emptypb.Empty{}, serviceErr.ErrUpdateUser
 	}

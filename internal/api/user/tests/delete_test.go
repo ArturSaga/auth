@@ -17,15 +17,6 @@ import (
 )
 
 func TestUserApi_DeleteUser(t *testing.T) {
-	type fields struct {
-		UnimplementedUserApiServer desc.UnimplementedUserApiServer
-		userService                service.UserService
-	}
-	type args struct {
-		ctx context.Context
-		req *desc.CreateUserRequest
-	}
-
 	t.Parallel()
 
 	// Инициализация контекста и вспомогательных данных

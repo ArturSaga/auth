@@ -10,7 +10,7 @@ import (
 	mm_atomic "sync/atomic"
 	mm_time "time"
 
-	"github.com/ArturSaga/auth/internal/model"
+	serviceModel "github.com/ArturSaga/auth/internal/model"
 	"github.com/gojuno/minimock/v3"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -20,8 +20,8 @@ type UserServiceMock struct {
 	t          minimock.Tester
 	finishOnce sync.Once
 
-	funcCreateUser          func(ctx context.Context, userInfo *model.UserInfo) (i1 int64, err error)
-	inspectFuncCreateUser   func(ctx context.Context, userInfo *model.UserInfo)
+	funcCreateUser          func(ctx context.Context, userInfo *serviceModel.UserInfo) (i1 int64, err error)
+	inspectFuncCreateUser   func(ctx context.Context, userInfo *serviceModel.UserInfo)
 	afterCreateUserCounter  uint64
 	beforeCreateUserCounter uint64
 	CreateUserMock          mUserServiceMockCreateUser
@@ -32,14 +32,14 @@ type UserServiceMock struct {
 	beforeDeleteUserCounter uint64
 	DeleteUserMock          mUserServiceMockDeleteUser
 
-	funcGetUser          func(ctx context.Context, id int64) (up1 *model.User, err error)
+	funcGetUser          func(ctx context.Context, id int64) (up1 *serviceModel.User, err error)
 	inspectFuncGetUser   func(ctx context.Context, id int64)
 	afterGetUserCounter  uint64
 	beforeGetUserCounter uint64
 	GetUserMock          mUserServiceMockGetUser
 
-	funcUpdateUser          func(ctx context.Context, userInfo *model.UpdateUserInfo) (e1 emptypb.Empty, err error)
-	inspectFuncUpdateUser   func(ctx context.Context, userInfo *model.UpdateUserInfo)
+	funcUpdateUser          func(ctx context.Context, userInfo *serviceModel.UpdateUserInfo) (e1 emptypb.Empty, err error)
+	inspectFuncUpdateUser   func(ctx context.Context, userInfo *serviceModel.UpdateUserInfo)
 	afterUpdateUserCounter  uint64
 	beforeUpdateUserCounter uint64
 	UpdateUserMock          mUserServiceMockUpdateUser
@@ -94,13 +94,13 @@ type UserServiceMockCreateUserExpectation struct {
 // UserServiceMockCreateUserParams contains parameters of the UserService.CreateUser
 type UserServiceMockCreateUserParams struct {
 	ctx      context.Context
-	userInfo *model.UserInfo
+	userInfo *serviceModel.UserInfo
 }
 
 // UserServiceMockCreateUserParamPtrs contains pointers to parameters of the UserService.CreateUser
 type UserServiceMockCreateUserParamPtrs struct {
 	ctx      *context.Context
-	userInfo **model.UserInfo
+	userInfo **serviceModel.UserInfo
 }
 
 // UserServiceMockCreateUserResults contains results of the UserService.CreateUser
@@ -120,7 +120,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) Optional() *mUserServiceMockCrea
 }
 
 // Expect sets up expected params for UserService.CreateUser
-func (mmCreateUser *mUserServiceMockCreateUser) Expect(ctx context.Context, userInfo *model.UserInfo) *mUserServiceMockCreateUser {
+func (mmCreateUser *mUserServiceMockCreateUser) Expect(ctx context.Context, userInfo *serviceModel.UserInfo) *mUserServiceMockCreateUser {
 	if mmCreateUser.mock.funcCreateUser != nil {
 		mmCreateUser.mock.t.Fatalf("UserServiceMock.CreateUser mock is already set by Set")
 	}
@@ -166,7 +166,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) ExpectCtxParam1(ctx context.Cont
 }
 
 // ExpectUserInfoParam2 sets up expected param userInfo for UserService.CreateUser
-func (mmCreateUser *mUserServiceMockCreateUser) ExpectUserInfoParam2(userInfo *model.UserInfo) *mUserServiceMockCreateUser {
+func (mmCreateUser *mUserServiceMockCreateUser) ExpectUserInfoParam2(userInfo *serviceModel.UserInfo) *mUserServiceMockCreateUser {
 	if mmCreateUser.mock.funcCreateUser != nil {
 		mmCreateUser.mock.t.Fatalf("UserServiceMock.CreateUser mock is already set by Set")
 	}
@@ -188,7 +188,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) ExpectUserInfoParam2(userInfo *m
 }
 
 // Inspect accepts an inspector function that has same arguments as the UserService.CreateUser
-func (mmCreateUser *mUserServiceMockCreateUser) Inspect(f func(ctx context.Context, userInfo *model.UserInfo)) *mUserServiceMockCreateUser {
+func (mmCreateUser *mUserServiceMockCreateUser) Inspect(f func(ctx context.Context, userInfo *serviceModel.UserInfo)) *mUserServiceMockCreateUser {
 	if mmCreateUser.mock.inspectFuncCreateUser != nil {
 		mmCreateUser.mock.t.Fatalf("Inspect function is already set for UserServiceMock.CreateUser")
 	}
@@ -212,7 +212,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) Return(i1 int64, err error) *Use
 }
 
 // Set uses given function f to mock the UserService.CreateUser method
-func (mmCreateUser *mUserServiceMockCreateUser) Set(f func(ctx context.Context, userInfo *model.UserInfo) (i1 int64, err error)) *UserServiceMock {
+func (mmCreateUser *mUserServiceMockCreateUser) Set(f func(ctx context.Context, userInfo *serviceModel.UserInfo) (i1 int64, err error)) *UserServiceMock {
 	if mmCreateUser.defaultExpectation != nil {
 		mmCreateUser.mock.t.Fatalf("Default expectation is already set for the UserService.CreateUser method")
 	}
@@ -227,7 +227,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) Set(f func(ctx context.Context, 
 
 // When sets expectation for the UserService.CreateUser which will trigger the result defined by the following
 // Then helper
-func (mmCreateUser *mUserServiceMockCreateUser) When(ctx context.Context, userInfo *model.UserInfo) *UserServiceMockCreateUserExpectation {
+func (mmCreateUser *mUserServiceMockCreateUser) When(ctx context.Context, userInfo *serviceModel.UserInfo) *UserServiceMockCreateUserExpectation {
 	if mmCreateUser.mock.funcCreateUser != nil {
 		mmCreateUser.mock.t.Fatalf("UserServiceMock.CreateUser mock is already set by Set")
 	}
@@ -267,7 +267,7 @@ func (mmCreateUser *mUserServiceMockCreateUser) invocationsDone() bool {
 }
 
 // CreateUser implements service.UserService
-func (mmCreateUser *UserServiceMock) CreateUser(ctx context.Context, userInfo *model.UserInfo) (i1 int64, err error) {
+func (mmCreateUser *UserServiceMock) CreateUser(ctx context.Context, userInfo *serviceModel.UserInfo) (i1 int64, err error) {
 	mm_atomic.AddUint64(&mmCreateUser.beforeCreateUserCounter, 1)
 	defer mm_atomic.AddUint64(&mmCreateUser.afterCreateUserCounter, 1)
 
@@ -747,7 +747,7 @@ type UserServiceMockGetUserParamPtrs struct {
 
 // UserServiceMockGetUserResults contains results of the UserService.GetUser
 type UserServiceMockGetUserResults struct {
-	up1 *model.User
+	up1 *serviceModel.User
 	err error
 }
 
@@ -841,7 +841,7 @@ func (mmGetUser *mUserServiceMockGetUser) Inspect(f func(ctx context.Context, id
 }
 
 // Return sets up results that will be returned by UserService.GetUser
-func (mmGetUser *mUserServiceMockGetUser) Return(up1 *model.User, err error) *UserServiceMock {
+func (mmGetUser *mUserServiceMockGetUser) Return(up1 *serviceModel.User, err error) *UserServiceMock {
 	if mmGetUser.mock.funcGetUser != nil {
 		mmGetUser.mock.t.Fatalf("UserServiceMock.GetUser mock is already set by Set")
 	}
@@ -854,7 +854,7 @@ func (mmGetUser *mUserServiceMockGetUser) Return(up1 *model.User, err error) *Us
 }
 
 // Set uses given function f to mock the UserService.GetUser method
-func (mmGetUser *mUserServiceMockGetUser) Set(f func(ctx context.Context, id int64) (up1 *model.User, err error)) *UserServiceMock {
+func (mmGetUser *mUserServiceMockGetUser) Set(f func(ctx context.Context, id int64) (up1 *serviceModel.User, err error)) *UserServiceMock {
 	if mmGetUser.defaultExpectation != nil {
 		mmGetUser.mock.t.Fatalf("Default expectation is already set for the UserService.GetUser method")
 	}
@@ -883,7 +883,7 @@ func (mmGetUser *mUserServiceMockGetUser) When(ctx context.Context, id int64) *U
 }
 
 // Then sets up UserService.GetUser return parameters for the expectation previously defined by the When method
-func (e *UserServiceMockGetUserExpectation) Then(up1 *model.User, err error) *UserServiceMock {
+func (e *UserServiceMockGetUserExpectation) Then(up1 *serviceModel.User, err error) *UserServiceMock {
 	e.results = &UserServiceMockGetUserResults{up1, err}
 	return e.mock
 }
@@ -909,7 +909,7 @@ func (mmGetUser *mUserServiceMockGetUser) invocationsDone() bool {
 }
 
 // GetUser implements service.UserService
-func (mmGetUser *UserServiceMock) GetUser(ctx context.Context, id int64) (up1 *model.User, err error) {
+func (mmGetUser *UserServiceMock) GetUser(ctx context.Context, id int64) (up1 *serviceModel.User, err error) {
 	mm_atomic.AddUint64(&mmGetUser.beforeGetUserCounter, 1)
 	defer mm_atomic.AddUint64(&mmGetUser.afterGetUserCounter, 1)
 
@@ -1057,13 +1057,13 @@ type UserServiceMockUpdateUserExpectation struct {
 // UserServiceMockUpdateUserParams contains parameters of the UserService.UpdateUser
 type UserServiceMockUpdateUserParams struct {
 	ctx      context.Context
-	userInfo *model.UpdateUserInfo
+	userInfo *serviceModel.UpdateUserInfo
 }
 
 // UserServiceMockUpdateUserParamPtrs contains pointers to parameters of the UserService.UpdateUser
 type UserServiceMockUpdateUserParamPtrs struct {
 	ctx      *context.Context
-	userInfo **model.UpdateUserInfo
+	userInfo **serviceModel.UpdateUserInfo
 }
 
 // UserServiceMockUpdateUserResults contains results of the UserService.UpdateUser
@@ -1083,7 +1083,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) Optional() *mUserServiceMockUpda
 }
 
 // Expect sets up expected params for UserService.UpdateUser
-func (mmUpdateUser *mUserServiceMockUpdateUser) Expect(ctx context.Context, userInfo *model.UpdateUserInfo) *mUserServiceMockUpdateUser {
+func (mmUpdateUser *mUserServiceMockUpdateUser) Expect(ctx context.Context, userInfo *serviceModel.UpdateUserInfo) *mUserServiceMockUpdateUser {
 	if mmUpdateUser.mock.funcUpdateUser != nil {
 		mmUpdateUser.mock.t.Fatalf("UserServiceMock.UpdateUser mock is already set by Set")
 	}
@@ -1129,7 +1129,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) ExpectCtxParam1(ctx context.Cont
 }
 
 // ExpectUserInfoParam2 sets up expected param userInfo for UserService.UpdateUser
-func (mmUpdateUser *mUserServiceMockUpdateUser) ExpectUserInfoParam2(userInfo *model.UpdateUserInfo) *mUserServiceMockUpdateUser {
+func (mmUpdateUser *mUserServiceMockUpdateUser) ExpectUserInfoParam2(userInfo *serviceModel.UpdateUserInfo) *mUserServiceMockUpdateUser {
 	if mmUpdateUser.mock.funcUpdateUser != nil {
 		mmUpdateUser.mock.t.Fatalf("UserServiceMock.UpdateUser mock is already set by Set")
 	}
@@ -1151,7 +1151,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) ExpectUserInfoParam2(userInfo *m
 }
 
 // Inspect accepts an inspector function that has same arguments as the UserService.UpdateUser
-func (mmUpdateUser *mUserServiceMockUpdateUser) Inspect(f func(ctx context.Context, userInfo *model.UpdateUserInfo)) *mUserServiceMockUpdateUser {
+func (mmUpdateUser *mUserServiceMockUpdateUser) Inspect(f func(ctx context.Context, userInfo *serviceModel.UpdateUserInfo)) *mUserServiceMockUpdateUser {
 	if mmUpdateUser.mock.inspectFuncUpdateUser != nil {
 		mmUpdateUser.mock.t.Fatalf("Inspect function is already set for UserServiceMock.UpdateUser")
 	}
@@ -1175,7 +1175,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) Return(e1 emptypb.Empty, err err
 }
 
 // Set uses given function f to mock the UserService.UpdateUser method
-func (mmUpdateUser *mUserServiceMockUpdateUser) Set(f func(ctx context.Context, userInfo *model.UpdateUserInfo) (e1 emptypb.Empty, err error)) *UserServiceMock {
+func (mmUpdateUser *mUserServiceMockUpdateUser) Set(f func(ctx context.Context, userInfo *serviceModel.UpdateUserInfo) (e1 emptypb.Empty, err error)) *UserServiceMock {
 	if mmUpdateUser.defaultExpectation != nil {
 		mmUpdateUser.mock.t.Fatalf("Default expectation is already set for the UserService.UpdateUser method")
 	}
@@ -1190,7 +1190,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) Set(f func(ctx context.Context, 
 
 // When sets expectation for the UserService.UpdateUser which will trigger the result defined by the following
 // Then helper
-func (mmUpdateUser *mUserServiceMockUpdateUser) When(ctx context.Context, userInfo *model.UpdateUserInfo) *UserServiceMockUpdateUserExpectation {
+func (mmUpdateUser *mUserServiceMockUpdateUser) When(ctx context.Context, userInfo *serviceModel.UpdateUserInfo) *UserServiceMockUpdateUserExpectation {
 	if mmUpdateUser.mock.funcUpdateUser != nil {
 		mmUpdateUser.mock.t.Fatalf("UserServiceMock.UpdateUser mock is already set by Set")
 	}
@@ -1230,7 +1230,7 @@ func (mmUpdateUser *mUserServiceMockUpdateUser) invocationsDone() bool {
 }
 
 // UpdateUser implements service.UserService
-func (mmUpdateUser *UserServiceMock) UpdateUser(ctx context.Context, userInfo *model.UpdateUserInfo) (e1 emptypb.Empty, err error) {
+func (mmUpdateUser *UserServiceMock) UpdateUser(ctx context.Context, userInfo *serviceModel.UpdateUserInfo) (e1 emptypb.Empty, err error) {
 	mm_atomic.AddUint64(&mmUpdateUser.beforeUpdateUserCounter, 1)
 	defer mm_atomic.AddUint64(&mmUpdateUser.afterUpdateUserCounter, 1)
 

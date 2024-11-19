@@ -17,6 +17,6 @@ func (i *UserApi) GetUser(ctx context.Context, req *desc.GetUserRequest) (*desc.
 	}
 
 	return &desc.GetUserResponse{
-		User: converter.ToUserFromService(userObj),
+		User: converter.ToUserDescFromService(userObj),
 	}, nil
 }
