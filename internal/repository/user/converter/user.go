@@ -2,6 +2,7 @@ package converter
 
 import (
 	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
+	modelRedis "github.com/ArturSaga/auth/internal/client/cache/redis/model"
 	"github.com/ArturSaga/auth/internal/constants"
 	"github.com/ArturSaga/auth/internal/model"
 	modelRepo "github.com/ArturSaga/auth/internal/repository/user/model"
@@ -21,6 +22,24 @@ func ToUserFromRepo(user *modelRepo.User) *model.User {
 	}
 }
 
+// ToUserRedisFromRepo - ковертер, который преобразует модель апи (протобаф) слоя в модель сервисного слоя
+func ToUserRedisFromRepo(user *modelRepo.User) *modelRedis.User {
+	if user == nil {
+		return &modelRedis.User{}
+	}
+
+	return &modelRedis.User{
+		ID:              user.ID,
+		Name:            user.Name,
+		Email:           user.Email,
+		Password:        user.Password,
+		PasswordConfirm: "",
+		Role:            user.Role,
+		CreatedAt:       user.CreatedAt.UnixNano(),
+		UpdatedAt:       user.UpdatedAt.UnixNano(),
+	}
+}
+
 // ToUserInfoFromRepo - ковертер, который преобразует модель репо слоя в смодель сервисного слоя
 func ToUserInfoFromRepo(info *modelRepo.User) *model.UserInfo {
 	if info == nil {
@@ -31,7 +50,7 @@ func ToUserInfoFromRepo(info *modelRepo.User) *model.UserInfo {
 		Name:            info.Name,
 		Email:           info.Email,
 		Password:        info.Password,
-		PasswordConfirm: info.PasswordConfirm,
+		PasswordConfirm: "",
 		Role:            RoleFromString(info.Role),
 	}
 }

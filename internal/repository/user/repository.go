@@ -9,11 +9,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"github.com/ArturSaga/auth/internal/client/db"
-	"github.com/ArturSaga/auth/internal/model"
+	"github.com/ArturSaga/platform_common/pkg/db"
+
+	serviceModel "github.com/ArturSaga/auth/internal/model"
 	"github.com/ArturSaga/auth/internal/repository"
-	"github.com/ArturSaga/auth/internal/repository/user/converter"
-	modelRepo "github.com/ArturSaga/auth/internal/repository/user/model"
+	repoConverter "github.com/ArturSaga/auth/internal/repository/user/converter"
+	repoModel "github.com/ArturSaga/auth/internal/repository/user/model"
 	serviceErr "github.com/ArturSaga/auth/internal/service_error"
 )
 
@@ -40,7 +41,7 @@ func NewUserRepository(db db.Client) repository.UserRepository {
 }
 
 // CreateUser - публичный метод, создания пользователя в бд
-func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64, error) {
+func (r *repo) CreateUser(ctx context.Context, userInfo *serviceModel.UserInfo) (int64, error) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(userInfo.Password), hashCost)
 	if err != nil {
 		fmt.Printf("failed to hash password: %v", err)
@@ -77,7 +78,7 @@ func (r *repo) CreateUser(ctx context.Context, userInfo *model.UserInfo) (int64,
 }
 
 // GetUser - публичный метод, получения пользователя из бд
-func (r *repo) GetUser(ctx context.Context, id int64) (*model.User, error) {
+func (r *repo) GetUser(ctx context.Context, id int64) (*serviceModel.User, error) {
 	builderSelect := sq.Select(idColumn, nameColumn, emailColumn, passwordHashColumn, roleColumn, createdAtColumn, updatedAtColumn).
 		From(tableName).
 		PlaceholderFormat(sq.Dollar).
@@ -93,18 +94,18 @@ func (r *repo) GetUser(ctx context.Context, id int64) (*model.User, error) {
 		QueryRaw: query,
 	}
 
-	var user modelRepo.User
+	var user repoModel.User
 	err = r.db.DB().ScanOneContext(ctx, &user, q, args...)
 	if err != nil {
 		fmt.Printf("failed to get user: %v", err)
 		return nil, err
 	}
 
-	return converter.ToUserFromRepo(&user), nil
+	return repoConverter.ToUserFromRepo(&user), nil
 }
 
 // UpdateUser - публичный метод, обновления пользователя в бд
-func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *model.UpdateUserInfo) (emptypb.Empty, error) {
+func (r *repo) UpdateUser(ctx context.Context, updateUserInfo *serviceModel.UpdateUserInfo) (emptypb.Empty, error) {
 	builderUserInfoUpdate := sq.Update(tableName)
 	hasUpdates := false
 

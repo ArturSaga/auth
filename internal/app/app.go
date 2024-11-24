@@ -9,8 +9,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/ArturSaga/platform_common/pkg/closer"
+
 	desc "github.com/ArturSaga/auth/api/grpc/pkg/user_v1"
-	"github.com/ArturSaga/auth/internal/closer"
 	"github.com/ArturSaga/auth/internal/config"
 )
 
